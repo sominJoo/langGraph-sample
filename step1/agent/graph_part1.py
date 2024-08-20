@@ -7,10 +7,10 @@ from step1.agent.state import State
 from step1.tools.utils.utillities import create_tool_node_with_fallback
 
 
-def run_graph(local_db_file):
+def run_graph():
     # 상태 관리 LangGraph 생성
     builder = StateGraph(State)
-    simple_agent = SimpleAgent(local_db_file)
+    simple_agent = SimpleAgent()
     part_1_assistant_runnable = simple_agent.setting()
 
     # Node 추가: Agent 연결
@@ -30,3 +30,4 @@ def run_graph(local_db_file):
     # 그래프 상태 유지를 위한 체크포인터 설정 -> 전체 그래프에 대한 메모리
     memory = MemorySaver()
     part_1_graph = builder.compile(checkpointer=memory)
+    return part_1_graph

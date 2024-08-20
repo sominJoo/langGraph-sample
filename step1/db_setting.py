@@ -7,12 +7,10 @@ class DBSetting:
     def connect_db(self, db):
         # DB 연결
         conn = sqlite3.connect(db)
-        cursor = conn.cursor()
 
         self.set_pandas_data(conn)
         conn.commit()
         conn.close()
-        return pd
 
     @staticmethod
     def set_pandas_data(conn):
