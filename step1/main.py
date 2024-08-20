@@ -1,10 +1,11 @@
 import os
 import shutil
-
 import requests
+import uuid
 
 from db_setting import DBSetting
 from step1.agent.graph_part1 import run_graph
+from step1.tools.utils.utillities import _print_event
 
 
 def main():
@@ -22,13 +23,27 @@ def main():
         shutil.copy(local_db_file, backup_file)
 
     db = DBSetting()
-    pandas_module = db.connect_db(local_db_file)  # pd 값을 받아옴
-    # pandas_module로 pd 사용 가능
-    print("pandas_module = ", pandas_module)
-    run_graph(local_db_file)
+    db.connect_db(local_db_file)
 
+    thread_id = str(uuid.uuid4())
+    config = {
+        "configurable": {
+            "thread_id": thread_id,  # LangGraph memory를 위한 thread_id
+        }
+    }
 
-#     TODO: 사용자 인풋 받기
+    # 사용자 입출력
+    print("여행 예약정보에 대한 질문을 입력해세요.")
+    _printed = set()
+    part_1_graph = run_graph()
+    while True:
+        query = input()
+        events = part_1_graph.stream(
+            {"messages": ("user", query)}, config, stream_mode="values"
+        )
+        for event in events:
+            _print_event(event, _printed)
+
 
 if __name__ == "__main__":
     main()
