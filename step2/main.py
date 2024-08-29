@@ -10,7 +10,7 @@ def main():
         "configurable": {
             "thread_id": thread_id,  # LangGraph memory를 위한 thread_id
         },
-        # "recursion_limit": 200 # 그래프에서 수행할 최대 단계 수
+        "recursion_limit": 150  # 그래프에서 수행할 최대 단계 수
     }
 
     # 사용자 입출력

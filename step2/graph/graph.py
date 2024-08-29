@@ -1,7 +1,9 @@
-from step2.agent.agent_setting import research_node, chart_node
-from step2.agent.db_agent.tool.db_tool import tool_node
-from step2.graph.query_route import query_route
+from langgraph.constants import START
+
 from langgraph.graph import END, StateGraph
+
+from step2.agent.db_agent.db_agent import research_node, chart_node, tool_node
+from step2.graph.query_route import router
 from step2.graph.state import AgentState
 
 
@@ -9,28 +11,32 @@ def get_graph():
     workflow = StateGraph(AgentState)
 
     workflow.add_node("Researcher", research_node)
-    workflow.add_node("Chart Generator", chart_node)
+    workflow.add_node("chart_generator", chart_node)
     workflow.add_node("call_tool", tool_node)
 
     workflow.add_conditional_edges(
         "Researcher",
-        query_route,
-        {"continue": "Chart Generator", "call_tool": "call_tool", "end": END},
+        router,
+        {"continue": "chart_generator", "call_tool": "call_tool", "__end__": END},
     )
     workflow.add_conditional_edges(
-        "Chart Generator",
-        query_route,
-        {"continue": "Researcher", "call_tool": "call_tool", "end": END},
+        "chart_generator",
+        router,
+        {"continue": "Researcher", "call_tool": "call_tool", "__end__": END},
     )
 
     workflow.add_conditional_edges(
         "call_tool",
+        # Each agent node updates the 'sender' field
+        # the tool calling node does not, meaning
+        # this edge will route back to the original agent
+        # who invoked the tool
         lambda x: x["sender"],
         {
             "Researcher": "Researcher",
-            "Chart Generator": "Chart Generator",
+            "chart_generator": "chart_generator",
         },
     )
-    workflow.set_entry_point("Researcher")
+    workflow.add_edge(START, "Researcher")
     graph = workflow.compile()
     return graph
