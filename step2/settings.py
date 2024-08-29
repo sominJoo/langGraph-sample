@@ -9,7 +9,7 @@ TAVILY_API_KEY = config("TAVILY_API_KEY")
 
 # LLM model setting
 LLM = {
-    "openAI": ChatOpenAI(api_key=OPENAI_API_KEY, model="gpt-3.5-turbo"),
+    "openAI": ChatOpenAI(api_key=OPENAI_API_KEY, model="gpt-4o"),
     "llama3": Ollama(model="llama3")
 }.get(config("LLM"), None)
 

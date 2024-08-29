@@ -2,7 +2,9 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 
 def create_agent(llm, tools, system_message: str):
-    """Create an agent."""
+    """
+    Agent 생성 - 기본 프롬프트 정의
+    """
     prompt = ChatPromptTemplate.from_messages(
         [
             (
