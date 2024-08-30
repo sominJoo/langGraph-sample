@@ -11,15 +11,11 @@ def db_query_tool(query: str) -> str:
     쿼리가 올바르지 않으면 오류 메시지가 반환됩니다.
     오류가 반환되면 쿼리를 다시 작성하고 쿼리를 확인한 후 다시 시도합니다.
     """
-    print(">>>>>>>>>>>>>>>>>>>>***************** db_query_tool query = ", query)
     db = db_connection()
     result = db.run_no_throw(query)
     if not result:
         return "Error: Query failed. Please rewrite your query and try again."
     return result
-
-
-
 
 
 def db_connection():

@@ -2,6 +2,7 @@ import uuid
 
 from step2.graph.graph import get_graph
 from langchain_core.messages import HumanMessage
+from step2.utils.utillities import print_event
 
 
 def main():
@@ -14,21 +15,18 @@ def main():
     }
 
     # 사용자 입출력
-    print("질문을 입력해세요.")
+    print("\n질문을 입력해세요.")
     _printed = set()
     graph = get_graph()
     while True:
         query = input()
         events = graph.stream(
-            {
-                "messages": [HumanMessage(content=query)],
-            },
+            {"messages": [HumanMessage(content=query)]},
             config,
             stream_mode="values"
         )
         for event in events:
-            from step2.utils.utillities import _print_event
-            _print_event(event, _printed)
+            print_event(event, _printed)
 
 
 if __name__ == "__main__":

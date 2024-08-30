@@ -5,6 +5,7 @@ from langgraph.prebuilt import ToolNode
 
 
 def handle_tool_error(state) -> dict:
+    print("handle_tool_error")
     error = state.get("error")
     tool_calls = state["messages"][-1].tool_calls
     return {
